@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/main_relativelayout_header" 
+  	android:layout_width="fill_parent" 
+  	android:layout_height="40dip"
+  	android:background="@drawable/widget_head_bg">
+  	
+    <TextView 
+        android:id="@+id/main_head_title"
+        style="@style/main_head_title"
+		android:layout_centerVertical="true"
+		android:layout_centerHorizontal="true"
+		android:text="养娃宝"/>
+	
+</RelativeLayout>

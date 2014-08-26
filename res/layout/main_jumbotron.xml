@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/main_imageView_relativeLayout"
+   	android:layout_width="match_parent"
+   	android:layout_height="150dp">
+
+    <FrameLayout
+            android:id="@+id/main_imageView_frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" >
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+            </android.support.v4.view.ViewPager>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/viewGroup"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true" 
+                    android:layout_alignParentRight="true"  
+                    android:layout_marginBottom="10dp"   
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/main_babyBirthday_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="12dp"
+                android:textColor="#111111"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/main_dateAndWeather_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="33dp"
+                android:layout_marginLeft="12dp"
+                android:textColor="#111111"
+                android:textSize="15sp" />
+        </FrameLayout>
+        
+</RelativeLayout>
