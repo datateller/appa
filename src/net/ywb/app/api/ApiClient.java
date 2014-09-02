@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import net.ywb.app.AppContext;
 import net.ywb.app.AppException;
+import net.ywb.app.bean.APIResult;
 import net.ywb.app.bean.ActiveList;
 import net.ywb.app.bean.BabyInfo;
 import net.ywb.app.bean.Barcode;
@@ -22,6 +23,7 @@ import net.ywb.app.bean.BlogList;
 import net.ywb.app.bean.CommentList;
 import net.ywb.app.bean.FavoriteList;
 import net.ywb.app.bean.FriendList;
+import net.ywb.app.bean.KnowledgeList;
 import net.ywb.app.bean.MessageList;
 import net.ywb.app.bean.MyInformation;
 import net.ywb.app.bean.News;
@@ -350,7 +352,10 @@ public class ApiClient {
 	 */
 	private static Result http_post(AppContext appContext, String url, Map<String, Object> params, Map<String,File> files) throws AppException, IOException {
         return Result.parse(_post(appContext, url, params, files));  
-	}	
+	}
+	private static APIResult http_post2(AppContext appContext, String url, Map<String, Object> params, Map<String,File> files) throws AppException, IOException {
+        return APIResult.parse(_post(appContext, url, params, files));  
+	}
 	
 	/**
 	 * 获取网络图片
@@ -526,12 +531,11 @@ public class ApiClient {
 			String newUrl = _MakeURL(URLs.BABYFACEURL, new HashMap<String, Object>(){{
 				put("type", "thumbnail");
 			}});
-			InputStream stream = http_get(appContext, newUrl);
-			String status = APIUtils.getStatusFromJson(stream);
-			if(status == "OK") {
-				return APIUtils.getDataFromJson(stream);
+			APIResult apiresult = APIResult.parse(http_get(appContext, newUrl));
+			if(apiresult.OK()) {
+				return apiresult.result;
 			} else {
-				throw AppException.run(new Exception(status));
+				throw AppException.run(new Exception(apiresult.status));
 			}
 		}catch(Exception e){
 			if(e instanceof AppException)
@@ -568,16 +572,14 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static Result updatePortrait(AppContext appContext, int uid, File portrait) throws AppException {
-		Map<String,Object> params = new HashMap<String,Object>();
-		params.put("uid", uid);
-		
+	public static APIResult updatePortrait(AppContext appContext, int uid, File portrait) throws AppException {
 		Map<String, File> files = new HashMap<String, File>();
 		files.put("portrait", portrait);
-				
+		
 		try{
-			return http_post(appContext, URLs.PORTRAIT_UPDATE, params, files);		
+			return http_post2(appContext, URLs.BABYFACE_UPLOAD, null, files);	
 		}catch(Exception e){
+			Log.e("userface", "upload userface exception:" + e.getMessage());
 			if(e instanceof AppException)
 				throw (AppException)e;
 			throw AppException.network(e);
@@ -694,6 +696,52 @@ public class ApiClient {
 		
 		try{
 			return FriendList.parse(http_get(appContext, newUrl));		
+		}catch(Exception e){
+			if(e instanceof AppException)
+				throw (AppException)e;
+			throw AppException.network(e);
+		}
+	}
+	
+	/**
+	 * 获取知识列表
+	 * @param url
+	 * @param catalog
+	 * @param pageIndex
+	 * @return
+	 * @throws AppException
+	 */
+	public static KnowledgeList getKnowledgeList(AppContext appContext, final int catalog, final int pageIndex, final int pageSize) throws AppException {
+		String newUrl = _MakeURL(URLs.POST_LIST, new HashMap<String, Object>(){{
+			put("catalog", catalog);
+			put("pageIndex", pageIndex);
+			put("pageSize", pageSize);
+		}});
+
+		try{
+			return KnowledgeList.parse(http_get(appContext, newUrl));		
+		}catch(Exception e){
+			if(e instanceof AppException)
+				throw (AppException)e;
+			throw AppException.network(e);
+		}
+	}
+	
+	/**
+	 * 通过Tag获取知识列表
+	 * @param url
+	 * @param catalog
+	 * @param pageIndex
+	 * @return
+	 * @throws AppException
+	 * @throws IOException 
+	 */
+	public static KnowledgeList getKnowledgeListByTag(AppContext appContext, final String tag, final int pageIndex, final int pageSize) throws AppException {
+		String newUrl = _MakeURL(URLs.KNOWLEDGE_LIST, new HashMap<String, Object>(){{
+			put("number", pageSize);
+		}});		
+		try{
+			return KnowledgeList.parse(http_get(appContext, newUrl));
 		}catch(Exception e){
 			if(e instanceof AppException)
 				throw (AppException)e;

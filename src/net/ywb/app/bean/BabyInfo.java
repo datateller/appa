@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParserException;
@@ -130,11 +131,17 @@ public class BabyInfo extends Entity{
 	 */
 	public static BabyInfo parse(InputStream stream) throws IOException, AppException {
 		try {
-			String jsonstr = APIUtils.getDataFromJson(stream);
-			Log.d("testing", "test BabyInfo jsonobj " + jsonstr);
-			Gson gson = new Gson();
-			BabyInfo fromJson = gson.fromJson(jsonstr, BabyInfo.class);
-			return fromJson;
+			APIResult apiresult = APIResult.parse(stream);
+			String status = apiresult.status;
+			if (!apiresult.OK()) {
+				Log.e("baby", "get babyinfo status :" + status);
+				throw new IOException(status);
+			} else {
+				Log.d("baby", "test BabyInfo data " + apiresult.result);
+				Gson gson = new Gson();
+				BabyInfo fromJson = gson.fromJson(apiresult.result, BabyInfo.class);
+				return fromJson;
+			}
 		} catch (Exception e) {
 			Log.e("exception", e.getMessage());
 			throw e;

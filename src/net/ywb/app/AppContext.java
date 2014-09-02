@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import net.ywb.app.R;
 import net.ywb.app.api.ApiClient;
+import net.ywb.app.bean.APIResult;
 import net.ywb.app.bean.ActiveList;
 import net.ywb.app.bean.BabyInfo;
 import net.ywb.app.bean.Barcode;
@@ -25,6 +26,7 @@ import net.ywb.app.bean.BlogList;
 import net.ywb.app.bean.CommentList;
 import net.ywb.app.bean.FavoriteList;
 import net.ywb.app.bean.FriendList;
+import net.ywb.app.bean.KnowledgeList;
 import net.ywb.app.bean.MessageList;
 import net.ywb.app.bean.MyInformation;
 import net.ywb.app.bean.News;
@@ -74,7 +76,7 @@ public class AppContext extends Application {
 	public static final int NETTYPE_CMWAP = 0x02;
 	public static final int NETTYPE_CMNET = 0x03;
 	
-	public static final int PAGE_SIZE = 20;//默认分页大小
+	public static final int PAGE_SIZE = 5;//默认分页大小
 	private static final int CACHE_TIME = 60*60000;//缓存失效时间
 	
 	private boolean login = false;	//登录状态
@@ -309,6 +311,7 @@ public class AppContext extends Application {
 			}catch(AppException e){
 				faceurl = "";
 			}
+			Log.d("userface", "get userface url " + faceurl);
 			try{
 				babyinfo = ApiClient.babyInfo(this, loginUid);
 				if(babyinfo != null && babyinfo.getBabyname().length() > 0){
@@ -390,7 +393,7 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public Result updatePortrait(File portrait) throws AppException {
+	public APIResult updatePortrait(File portrait) throws AppException {
 		return ApiClient.updatePortrait(this, loginUid, portrait);
 	}
 	
@@ -477,6 +480,39 @@ public class AppContext extends Application {
 			list = (FriendList)readObject(key);
 			if(list == null)
 				list = new FriendList();
+		}
+		return list;
+	}
+	
+	/**
+	 * 知识列表
+	 * @param tag
+	 * @param pageIndex
+	 * @return
+	 * @throws ApiException
+	 */
+	public KnowledgeList getKnowledgeListByTag(String tag, int pageIndex, boolean isRefresh) throws AppException {
+		KnowledgeList list = null;
+		String key = "knowledgelist_"+"default"+"_"+pageIndex+"_"+PAGE_SIZE;
+		if(isNetworkConnected() && (!isReadDataCache(key) || isRefresh)) {		
+			try{
+				list = ApiClient.getKnowledgeListByTag(this, "default", pageIndex, PAGE_SIZE);
+				if(list != null && pageIndex == 0){
+					Notice notice = list.getNotice();
+					list.setNotice(null);
+					list.setCacheKey(key);
+					saveObject(list, key);
+					list.setNotice(notice);
+				}
+			}catch(AppException e){
+				list = (KnowledgeList)readObject(key);
+				if(list == null)
+					throw e;
+			}
+		} else {
+			list = (KnowledgeList)readObject(key);
+			if(list == null)
+				list = new KnowledgeList();
 		}
 		return list;
 	}

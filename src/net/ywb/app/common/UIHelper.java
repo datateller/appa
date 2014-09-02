@@ -5,6 +5,8 @@ package net.ywb.app.common;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,8 +25,11 @@ import net.ywb.app.api.ApiClient;
 //import net.oschina.app.bean.Messages;
 //import net.oschina.app.bean.News;
 import net.ywb.app.bean.Notice;
+import net.ywb.app.bean.URLs;
+import net.ywb.app.ui.KnowledgeListActivity;
 import net.ywb.app.ui.LoginDialog;
 import net.ywb.app.ui.Main;
+import net.ywb.app.ui.KnowledgeDetail;
 //import net.oschina.app.bean.Post;
 //import net.oschina.app.bean.Report;
 //import net.oschina.app.bean.Result;
@@ -195,29 +200,29 @@ public class UIHelper {
 //		context.startActivity(intent);
 //	}
 //
-//	/**
-//	 * 显示帖子详情
-//	 * 
-//	 * @param context
-//	 * @param postId
-//	 */
-//	public static void showQuestionDetail(Context context, int postId) {
-//		Intent intent = new Intent(context, QuestionDetail.class);
-//		intent.putExtra("post_id", postId);
-//		context.startActivity(intent);
-//	}
-//
-//	/**
-//	 * 显示相关Tag帖子列表
-//	 * 
-//	 * @param context
-//	 * @param tag
-//	 */
-//	public static void showQuestionListByTag(Context context, String tag) {
-//		Intent intent = new Intent(context, QuestionTag.class);
-//		intent.putExtra("post_tag", tag);
-//		context.startActivity(intent);
-//	}
+	/**
+	 * 显示知识详情
+	 * 
+	 * @param context
+	 * @param knowledgeId
+	 */
+	public static void showKnowledgeDetail(Context context, int knowledgeId) {
+		Intent intent = new Intent(context, KnowledgeDetail.class);
+		intent.putExtra("post_id", knowledgeId);
+		context.startActivity(intent);
+	}
+
+	/**
+	 * 显示相关Tag帖子列表
+	 * 
+	 * @param context
+	 * @param tag
+	 */
+	public static void showKnowledgeList(Context context, String tag) {
+		Intent intent = new Intent(context, KnowledgeListActivity.class);
+		intent.putExtra("post_tag", tag);
+		context.startActivity(intent);
+	}
 //
 //	/**
 //	 * 显示我要提问页面
@@ -989,7 +994,7 @@ public class UIHelper {
 			}
 		}.start();
 	}
-//
+
 //	/**
 //	 * url跳转
 //	 * 
@@ -1005,7 +1010,7 @@ public class UIHelper {
 //			openBrowser(context, url);
 //		}
 //	}
-//
+
 //	public static void showLinkRedirect(Context context, int objType,
 //			int objId, String objKey) {
 //		switch (objType) {
@@ -1035,23 +1040,23 @@ public class UIHelper {
 //			break;
 //		}
 //	}
-//
-//	/**
-//	 * 打开浏览器
-//	 * 
-//	 * @param context
-//	 * @param url
-//	 */
-//	public static void openBrowser(Context context, String url) {
-//		try {
-//			Uri uri = Uri.parse(url);
-//			Intent it = new Intent(Intent.ACTION_VIEW, uri);
-//			context.startActivity(it);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			ToastMessage(context, "无法浏览此网页", 500);
-//		}
-//	}
+
+	/**
+	 * 打开浏览器
+	 * 
+	 * @param context
+	 * @param url
+	 */
+	public static void openBrowser(Context context, String url) {
+		try {
+			Uri uri = Uri.parse(url);
+			Intent it = new Intent(Intent.ACTION_VIEW, uri);
+			context.startActivity(it);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ToastMessage(context, "无法浏览此网页", 500);
+		}
+	}
 //
 //	/**
 //	 * 获取webviewClient对象
@@ -1710,4 +1715,18 @@ public class UIHelper {
 //			option.showAsDropDown(aim, -10, 0);
 //		}
 //	}
+	
+    public static Drawable LoadImageFromWebOperations(String url)
+   {
+        try
+        {
+            InputStream is = (InputStream) new URL(url).getContent();
+            Drawable d = Drawable.createFromStream(is, "src name");
+            return d;
+        }catch (Exception e) {
+            System.out.println("Exc="+e);
+            return null;
+        }
+    }
+	
 }

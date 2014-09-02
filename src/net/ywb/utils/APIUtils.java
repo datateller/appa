@@ -27,15 +27,14 @@ public class APIUtils {
 				buffer.append(line);
 			}
 			String jsonstr = buffer.toString();
+			Log.d("testing", "APIUtil getDataFromJson full json string: " + jsonstr);
 			JSONObject jsonObj = new JSONObject(jsonstr);
-			String fromJson = jsonObj.getJSONObject("result").toString();
-			Log.d("testing", "getDataFromJson " + fromJson);
-			return fromJson;
+			String data = jsonObj.getJSONObject("result").toString();
+			Log.d("testing", "APIUtil getDataFromJson data json string:  " + data);
+			return data;
 		} catch (Exception e) {
 			Log.e("exception", e.getMessage());
 			throw AppException.json(e);
-		} finally {
-			stream.close();
 		}
 	}
 	
@@ -57,8 +56,6 @@ public class APIUtils {
 		} catch (Exception e) {
 			Log.e("exception", e.getMessage());
 			throw AppException.json(e);
-		} finally {
-			stream.close();
 		}
 	}
 	

@@ -27,6 +27,9 @@ public class URLs implements Serializable {
 	public final static String LOGIN_VALIDATE_HTTP = HTTP + HOST + URL_SPLITTER + "user/login/";
 	public final static String BABYINFO = HTTP + HOST + URL_SPLITTER + "user/info/";
 	public final static String BABYFACEURL = HTTP + HOST + URL_SPLITTER + "user/gethead/";
+	public final static String KNOWLEDGE_LIST = URL_API_HOST + "knowledge/list/";
+	public final static String KNOWLEDGE_DETAIL_BASE = URL_API_HOST + "knowledge/webview/";
+	public final static String BABYFACE_UPLOAD = URL_API_HOST+"user/posthead/";
 	//add by shengeng end
 	public final static String LOGIN_VALIDATE_HTTPS = HTTPS + HOST + URL_SPLITTER + "user/login/";
 	public final static String NEWS_LIST = URL_API_HOST+"action/api/news_list";

@@ -11,6 +11,7 @@ import org.apache.http.client.utils.URIUtils;
 import net.ywb.app.AppContext;
 import net.ywb.app.AppException;
 import net.ywb.app.R;
+import net.ywb.app.bean.APIResult;
 import net.ywb.app.bean.FriendList;
 import net.ywb.app.bean.MyInformation;
 import net.ywb.app.bean.Result;
@@ -29,6 +30,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -54,16 +56,8 @@ public class UserInfo extends BaseActivity {
 	private TextView homeaddr;
 	private TextView weight;
 	private TextView height;
-//	private TextView jointime;
-//	private TextView from;
-//	private TextView devplatform;
-//	private TextView expertise;
-//	private TextView followers;
-//	private TextView fans;
 	private TextView favorites;
 	private LinearLayout favorites_ll;
-//	private LinearLayout followers_ll;
-//	private LinearLayout fans_ll;
 	private LoadingDialog loading;
 	private MyInformation user;
 	private Handler mHandler;
@@ -103,16 +97,8 @@ public class UserInfo extends BaseActivity {
 		homeaddr = (TextView) findViewById(R.id.baby_info_homeaddr);
 		height = (TextView) findViewById(R.id.baby_info_height);
 		weight = (TextView) findViewById(R.id.baby_info_weight);
-//		jointime = (TextView) findViewById(R.id.user_info_jointime);
-//		from = (TextView) findViewById(R.id.user_info_from);
-//		devplatform = (TextView) findViewById(R.id.user_info_devplatform);
-//		expertise = (TextView) findViewById(R.id.user_info_expertise);
-//		followers = (TextView) findViewById(R.id.user_info_followers);
-//		fans = (TextView) findViewById(R.id.user_info_fans);
 		favorites = (TextView) findViewById(R.id.user_info_favorites);
 		favorites_ll = (LinearLayout) findViewById(R.id.user_info_favorites_ll);
-//		followers_ll = (LinearLayout) findViewById(R.id.user_info_followers_ll);
-//		fans_ll = (LinearLayout) findViewById(R.id.user_info_fans_ll);
 	}
 
 	private void initData() {
@@ -138,18 +124,9 @@ public class UserInfo extends BaseActivity {
 					homeaddr.setText(user.baby.getHomeaddr());
 					height.setText(user.baby.getHeight());
 					weight.setText(user.baby.getWeight());
-//					jointime.setText(StringUtils.friendly_time(user
-//							.getJointime()));
-//					from.setText(user.getFrom());
-//					devplatform.setText(user.getDevplatform());
-//					expertise.setText(user.getExpertise());
-//					followers.setText(user.getFollowerscount() + "");
-//					fans.setText(user.getFanscount() + "");
 					favorites.setText(user.baby.getId() + "");
 
 					favorites_ll.setOnClickListener(favoritesClickListener);
-//					fans_ll.setOnClickListener(fansClickListener);
-//					followers_ll.setOnClickListener(followersClickListener);
 
 				} else if (msg.obj != null) {
 					((AppException) msg.obj).makeToast(UserInfo.this);
@@ -201,23 +178,6 @@ public class UserInfo extends BaseActivity {
 		}
 	};
 
-//	private View.OnClickListener fansClickListener = new View.OnClickListener() {
-//		public void onClick(View v) {
-//			int followers = user != null ? user.getFollowerscount() : 0;
-//			int fans = user != null ? user.getFanscount() : 0;
-//			UIHelper.showUserFriend(v.getContext(), FriendList.TYPE_FANS,
-//					followers, fans);
-//		}
-//	};
-//
-//	private View.OnClickListener followersClickListener = new View.OnClickListener() {
-//		public void onClick(View v) {
-//			int followers = user != null ? user.getFollowerscount() : 0;
-//			int fans = user != null ? user.getFanscount() : 0;
-//			UIHelper.showUserFriend(v.getContext(), FriendList.TYPE_FOLLOWER,
-//					followers, fans);
-//		}
-//	};
 
 	// 裁剪头像的绝对路径
 	private Uri getUploadTempFile(Uri uri) {
@@ -356,9 +316,9 @@ public class UserInfo extends BaseActivity {
 				if (loading != null)
 					loading.dismiss();
 				if (msg.what == 1 && msg.obj != null) {
-					Result res = (Result) msg.obj;
+					APIResult res = (APIResult) msg.obj;
 					// 提示信息
-					UIHelper.ToastMessage(UserInfo.this, res.getErrorMessage());
+					UIHelper.ToastMessage(UserInfo.this, res.status);
 					if (res.OK()) {
 						// 显示新头像
 						face.setImageBitmap(protraitBitmap);
@@ -388,7 +348,7 @@ public class UserInfo extends BaseActivity {
 				if (protraitBitmap != null) {
 					Message msg = new Message();
 					try {
-						Result res = ((AppContext) getApplication())
+						APIResult res = ((AppContext) getApplication())
 								.updatePortrait(protraitFile);
 						if (res != null && res.OK()) {
 							// 保存新头像到缓存

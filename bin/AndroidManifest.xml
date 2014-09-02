@@ -67,6 +67,18 @@
         </activity>
         
         <activity
+            android:name=".ui.KnowledgeListActivity"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SlideTop" />
+        <activity
+            android:name=".ui.KnowledgeDetail"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/Theme.SlideTop" />
+        
+        <activity
             android:name=".ui.LoginDialog"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTask"
